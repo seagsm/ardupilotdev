@@ -21,7 +21,7 @@ namespace ArduPilotConfigTool
 
         options_form options_form = new options_form();
         
-
+        //wp_altQNH
         //private options_form test; 
         bool bStartup;
         Double nMult = 1;
@@ -122,8 +122,8 @@ namespace ArduPilotConfigTool
             {
                 double nLat;
                 double nLng;
-                double.TryParse(myRegistry.Read("HomeLat", "48.334286"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.GetCultureInfo("en-US"), out nLat);
-                double.TryParse(myRegistry.Read("HomeLong", "2.873869"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.GetCultureInfo("en-US"), out nLng);
+                double.TryParse(myRegistry.Read("HomeLat", "49.227997"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.GetCultureInfo("en-US"), out nLat);
+                double.TryParse(myRegistry.Read("HomeLong", "16.557367"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.GetCultureInfo("en-US"), out nLng);
 
                 launchLat.Text = Convert.ToString(nLat);
                 launchLon.Text = Convert.ToString(nLng);
@@ -256,7 +256,7 @@ namespace ArduPilotConfigTool
         private void restartMaxAltitutdeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result;
-            result = MessageBox.Show("Etes-vous sur?", "Reset alt/vit Max", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            result = MessageBox.Show("Are you sure?", "Reset alt/vit Max", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
                 portControl1.clear_max_altspd();
@@ -276,7 +276,7 @@ namespace ArduPilotConfigTool
             {
                 cmdClear_Click(null,null);
             }
-            statusLabel.Text = "Lecture des données...";
+            statusLabel.Text = "Reading data...";
             progressBar1.Maximum = 120;
             progressBar1.Value = 10;
             this.Refresh();
@@ -410,7 +410,7 @@ namespace ArduPilotConfigTool
 
         private void portControl1_read_succesfull(object sender, EventArgs e)
         {
-            statusLabel.Text = "Lecture réussie!";
+            statusLabel.Text = "Reading success!";
             //update_maps();
             this.Refresh();
             //webBrowser1.Document.GetElementById("homeLat").SetAttribute("value", latLngAlt[0]);
@@ -434,7 +434,7 @@ namespace ArduPilotConfigTool
 
         private void portControl1_read_wrong(object sender, EventArgs e)
         {
-            statusLabel.Text = "Lecture impossible!";
+            statusLabel.Text = "Reading impossible!";
             this.Refresh();
         }
         
@@ -444,7 +444,7 @@ namespace ArduPilotConfigTool
             string sError = "";
 
             progressBar1.Value = 0;
-            statusLabel.Text = "Ecriture des données...";
+            statusLabel.Text = "Writing data...";
             this.Refresh();
 
             if (cboMetersFeet.Text == "Pieds")
@@ -523,6 +523,49 @@ namespace ArduPilotConfigTool
             }
         }
 
+        private double getAltitudeData(double latitude, double longitude)
+        {
+            try
+            {
+                if (bOverTerrainMode == false)
+                {
+                    return 0;
+                }
+
+                double nDoubleReturn = 0;
+                string altitude;
+                
+                webBrowser1.Document.GetElementById("endAltRequest").SetAttribute("value", "0");
+                webBrowser1.Document.GetElementById("AltLat").SetAttribute("value", Regex.Replace(latitude.ToString(), ",", "."));
+                webBrowser1.Document.GetElementById("AltLng").SetAttribute("value", Regex.Replace(longitude.ToString(), ",", "."));
+                webBrowser1.Document.GetElementById("getWpAltitudeButton").InvokeMember("click");
+                /* Wait for end of events. */
+                var someTime = DateTime.Now.Ticks;
+                do
+                {
+                    Application.DoEvents();
+                    if ((DateTime.Now.Ticks - someTime) > 10000000)/* 10000000 is waiting about 1 sec. */
+                    {
+                        break;
+                    }
+                } while (webBrowser1.Document.GetElementById("endAltRequest").GetAttribute("value") != "1");
+
+                altitude = webBrowser1.Document.GetElementById("wpaltitude").GetAttribute("value");
+                setOnlineMode(true);
+
+                double.TryParse(altitude, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.GetCultureInfo("en-US"), out nDoubleReturn);
+                /* 
+                 * Altitude returned in meters. 
+                 */
+                return Convert.ToDouble(string.Format("{0:n2}", nDoubleReturn * nMult / 0.3048));
+            }
+            catch
+            {
+                setOnlineMode(false);
+                return 0;
+            }
+        }
+/*
         private double getAltitudeData(double latitude,double longitude)
         {
             try
@@ -534,8 +577,9 @@ namespace ArduPilotConfigTool
 
                 double nDoubleReturn;
                 // Create a 'WebRequest' object with the specified url. 
-                WebRequest myWebRequest = WebRequest.Create("http://gisdata.usgs.gov/XMLWebServices2/Elevation_Service.asmx/getElevation?X_Value=" + Regex.Replace(longitude.ToString(), ",", ".") + "&Y_Value=" + Regex.Replace(latitude.ToString(), ",", ".") + "&Elevation_Units=FEET&Source_Layer=-1&Elevation_Only=True");
-
+                //WebRequest myWebRequest = WebRequest.Create("http://gisdata.usgs.gov/XMLWebServices2/Elevation_Service.asmx/getElevation?X_Value=" + Regex.Replace(longitude.ToString(), ",", ".") + "&Y_Value=" + Regex.Replace(latitude.ToString(), ",", ".") + "&Elevation_Units=FEET&Source_Layer=-1&Elevation_Only=True");
+                WebRequest myWebRequest = WebRequest.Create("http://gisdata.usgs.gov/XMLWebServices2/Elevation_Service.asmx/getElevation?X_Value=" + Regex.Replace(longitude.ToString(), ",", ".") + "&Y_Value=" + Regex.Replace(latitude.ToString(), ",", ".") + "&Elevation_Units=METERS&Source_Layer=-1&Elevation_Only=True");
+                
                 // Send the 'WebRequest' and wait for response. 
                 WebResponse myWebResponse = myWebRequest.GetResponse();
 
@@ -573,7 +617,7 @@ namespace ArduPilotConfigTool
                 return 0;
             }
         }
-
+*/
         private void setOnlineMode(Boolean isOnline)
         {
             if (isOnline == true && bOverTerrainMode == true)
@@ -582,7 +626,7 @@ namespace ArduPilotConfigTool
                 missionGrid.Columns[2].Width = 65;
                 missionGrid.Columns[3].Width = 60;
                 missionGrid.Columns[3].ReadOnly = true;
-                missionGrid.Columns[3].HeaderText = "Alt vol  (QNH)";
+                missionGrid.Columns[3].HeaderText = "Alt flight (QNH)";
                 missionGrid.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 missionGrid.Columns[4].Visible = true;
                 missionGrid.Columns[5].Visible = true;
@@ -662,13 +706,13 @@ namespace ArduPilotConfigTool
 
         private void portControl1_write_succesfull(object sender, EventArgs e)
         {
-            statusLabel.Text = "Ecriture réussie!";
+            statusLabel.Text = "Write success!";
             this.Refresh();
         }
 
         private void portControl1_write_wrong(object sender, EventArgs e)
         {
-            statusLabel.Text = "Quelque chose n'a pas marché!!!";
+            statusLabel.Text = "Something going wrong!!!";
             this.Refresh();
         }
 
@@ -931,11 +975,11 @@ namespace ArduPilotConfigTool
 
                 if (bOnlineMode == true && bCompatibleMode == true)
                 {
-                    lblClickMap.Text = "Cliquez sur la carte pour ajouter un Wp";
+                    lblClickMap.Text = "Click the map to add a Wp";
                 }
                 else
                 {
-                    lblClickMap.Text = "Click pour ajouter un Wp";
+                    lblClickMap.Text = "Click to add a Wp";
                 }
                 lblClickMap.Visible = true;
             }

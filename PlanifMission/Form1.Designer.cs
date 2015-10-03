@@ -105,6 +105,7 @@ namespace ArduPilotConfigTool
             this.numericMaps = new System.Windows.Forms.NumericUpDown();
             this.RemoveRow = new System.Windows.Forms.Button();
             this.lblOfflineLabel = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.missionGrid)).BeginInit();
             this.mnuMain.SuspendLayout();
             this.Launch_paramters.SuspendLayout();
@@ -114,6 +115,10 @@ namespace ArduPilotConfigTool
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.grpOnline.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaps)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // missionGrid
@@ -138,10 +143,10 @@ namespace ArduPilotConfigTool
             this.missionGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.missionGrid.Size = new System.Drawing.Size(346, 293);
             this.missionGrid.TabIndex = 1;
+            this.missionGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.missionGrid_CellContentClick);
+            this.missionGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.missionGrid_CellEndEdit);
             this.missionGrid.Enter += new System.EventHandler(this.missionGrid_Enter);
             this.missionGrid.Leave += new System.EventHandler(this.missionGrid_Leave);
-            this.missionGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.missionGrid_CellEndEdit);
-            this.missionGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.missionGrid_CellContentClick);
             // 
             // Number
             // 
@@ -193,7 +198,7 @@ namespace ArduPilotConfigTool
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle3.NullValue = null;
             this.SeaLevelAlt.DefaultCellStyle = dataGridViewCellStyle3;
-            this.SeaLevelAlt.HeaderText = "Alt du sol (QFE)";
+            this.SeaLevelAlt.HeaderText = "Sea Level Alt (QFE)";
             this.SeaLevelAlt.Name = "SeaLevelAlt";
             this.SeaLevelAlt.ReadOnly = true;
             this.SeaLevelAlt.Width = 60;
@@ -207,8 +212,8 @@ namespace ArduPilotConfigTool
             this.launchLat.TabIndex = 3;
             this.launchLat.Text = "0.000000";
             this.launchLat.TextChanged += new System.EventHandler(this.launchLat_TextChanged);
-            this.launchLat.Leave += new System.EventHandler(this.launchLat_Leave);
             this.launchLat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.launchLat_KeyPress);
+            this.launchLat.Leave += new System.EventHandler(this.launchLat_Leave);
             // 
             // launchLon
             // 
@@ -219,17 +224,17 @@ namespace ArduPilotConfigTool
             this.launchLon.TabIndex = 4;
             this.launchLon.Text = "0.000000";
             this.launchLon.TextChanged += new System.EventHandler(this.launchLon_TextChanged);
-            this.launchLon.Leave += new System.EventHandler(this.launchLon_Leave);
             this.launchLon.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.launchLon_KeyPress);
+            this.launchLon.Leave += new System.EventHandler(this.launchLon_Leave);
             // 
             // launchManually
             // 
             this.launchManually.AutoSize = true;
             this.launchManually.Location = new System.Drawing.Point(6, 175);
             this.launchManually.Name = "launchManually";
-            this.launchManually.Size = new System.Drawing.Size(100, 17);
+            this.launchManually.Size = new System.Drawing.Size(88, 17);
             this.launchManually.TabIndex = 6;
-            this.launchManually.Text = "Saisie Manuelle";
+            this.launchManually.Text = "Manual Entry";
             this.launchManually.UseVisualStyleBackColor = true;
             this.launchManually.CheckedChanged += new System.EventHandler(this.launchManually_CheckedChanged);
             // 
@@ -241,7 +246,7 @@ namespace ArduPilotConfigTool
             this.dIYdronescomToolStripMenuItem});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(998, 24);
+            this.mnuMain.Size = new System.Drawing.Size(1157, 24);
             this.mnuMain.TabIndex = 13;
             this.mnuMain.Text = "menuStrip1";
             this.mnuMain.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnuMain_ItemClicked);
@@ -262,35 +267,35 @@ namespace ArduPilotConfigTool
             this.toolStripSeparator7,
             this.mnuExit});
             this.mnuFiles.Name = "mnuFiles";
-            this.mnuFiles.Size = new System.Drawing.Size(54, 20);
-            this.mnuFiles.Text = "Fichier";
+            this.mnuFiles.Size = new System.Drawing.Size(37, 20);
+            this.mnuFiles.Text = "File";
             this.mnuFiles.Click += new System.EventHandler(this.toolStripMenuItem8_Click);
             // 
             // mnuLoadMission
             // 
             this.mnuLoadMission.Name = "mnuLoadMission";
-            this.mnuLoadMission.Size = new System.Drawing.Size(201, 22);
-            this.mnuLoadMission.Text = "Charger une Mission";
+            this.mnuLoadMission.Size = new System.Drawing.Size(200, 22);
+            this.mnuLoadMission.Text = "Load Mission";
             this.mnuLoadMission.Click += new System.EventHandler(this.mnuLoadMission_Click);
             // 
             // mnuSaveMission
             // 
             this.mnuSaveMission.Name = "mnuSaveMission";
-            this.mnuSaveMission.Size = new System.Drawing.Size(201, 22);
-            this.mnuSaveMission.Text = "Sauver la Mission";
+            this.mnuSaveMission.Size = new System.Drawing.Size(200, 22);
+            this.mnuSaveMission.Text = "Saving Mission";
             this.mnuSaveMission.Click += new System.EventHandler(this.mnuSaveMission_Click);
             // 
             // mnuSaveMissionAs
             // 
             this.mnuSaveMissionAs.Name = "mnuSaveMissionAs";
-            this.mnuSaveMissionAs.Size = new System.Drawing.Size(201, 22);
-            this.mnuSaveMissionAs.Text = "Sauver la Mission sous...";
+            this.mnuSaveMissionAs.Size = new System.Drawing.Size(200, 22);
+            this.mnuSaveMissionAs.Text = "Mission Save As ...";
             this.mnuSaveMissionAs.Visible = false;
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(198, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(197, 6);
             // 
             // cboComSelect
             // 
@@ -324,31 +329,31 @@ namespace ArduPilotConfigTool
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(198, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(197, 6);
             // 
             // mnuRead
             // 
             this.mnuRead.Name = "mnuRead";
-            this.mnuRead.Size = new System.Drawing.Size(201, 22);
-            this.mnuRead.Text = "Lire";
+            this.mnuRead.Size = new System.Drawing.Size(200, 22);
+            this.mnuRead.Text = "Read";
             this.mnuRead.Click += new System.EventHandler(this.mnuRead_Click);
             // 
             // mnuWrite
             // 
             this.mnuWrite.Name = "mnuWrite";
-            this.mnuWrite.Size = new System.Drawing.Size(201, 22);
-            this.mnuWrite.Text = "Ecrire";
+            this.mnuWrite.Size = new System.Drawing.Size(200, 22);
+            this.mnuWrite.Text = "Write";
             this.mnuWrite.Click += new System.EventHandler(this.mnuWrite_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(198, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(197, 6);
             // 
             // mnuExit
             // 
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(201, 22);
+            this.mnuExit.Size = new System.Drawing.Size(200, 22);
             this.mnuExit.Text = "Exit";
             this.mnuExit.Click += new System.EventHandler(this.toolStripMenuItem14_Click);
             // 
@@ -358,8 +363,8 @@ namespace ArduPilotConfigTool
             this.optionsToolStripMenuItem,
             this.restartMaxAltitutdeToolStripMenuItem});
             this.moreToolStripMenuItem.Name = "moreToolStripMenuItem";
-            this.moreToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.moreToolStripMenuItem.Text = "Autre";
+            this.moreToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.moreToolStripMenuItem.Text = "Other";
             // 
             // optionsToolStripMenuItem
             // 
@@ -409,7 +414,7 @@ namespace ArduPilotConfigTool
             this.Launch_paramters.Size = new System.Drawing.Size(105, 227);
             this.Launch_paramters.TabIndex = 24;
             this.Launch_paramters.TabStop = false;
-            this.Launch_paramters.Text = "Position terrain";
+            this.Launch_paramters.Text = "Field position";
             this.Launch_paramters.Enter += new System.EventHandler(this.Launch_paramters_Enter);
             // 
             // chkLookupAlt
@@ -419,6 +424,7 @@ namespace ArduPilotConfigTool
             this.chkLookupAlt.Name = "chkLookupAlt";
             this.chkLookupAlt.Size = new System.Drawing.Size(65, 17);
             this.chkLookupAlt.TabIndex = 30;
+            this.chkLookupAlt.Tag = "eeee";
             this.chkLookupAlt.Text = "Alt QNH";
             this.chkLookupAlt.UseVisualStyleBackColor = true;
             this.chkLookupAlt.CheckedChanged += new System.EventHandler(this.chkLookupAlt_CheckedChanged);
@@ -428,18 +434,18 @@ namespace ArduPilotConfigTool
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 133);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(74, 13);
+            this.label4.Size = new System.Drawing.Size(69, 13);
             this.label4.TabIndex = 29;
-            this.label4.Text = "Altitude de vol";
+            this.label4.Text = "Flight altitude";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 94);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 13);
+            this.label3.Size = new System.Drawing.Size(91, 13);
             this.label3.TabIndex = 28;
-            this.label3.Text = "Alt sol (maintien)";
+            this.label3.Text = "Ground alt (setup)";
             // 
             // label2
             // 
@@ -481,11 +487,12 @@ namespace ArduPilotConfigTool
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(469, 27);
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(522, 476);
+            this.webBrowser1.Size = new System.Drawing.Size(663, 523);
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.WebBrowserShortcutsEnabled = false;
             // 
@@ -512,7 +519,7 @@ namespace ArduPilotConfigTool
             this.cmdWrite.Name = "cmdWrite";
             this.cmdWrite.Size = new System.Drawing.Size(97, 22);
             this.cmdWrite.TabIndex = 20;
-            this.cmdWrite.Text = "Ecrire";
+            this.cmdWrite.Text = "Write";
             this.cmdWrite.UseVisualStyleBackColor = true;
             this.cmdWrite.Click += new System.EventHandler(this.cmdWrite_Click);
             // 
@@ -522,7 +529,7 @@ namespace ArduPilotConfigTool
             this.cmdRead.Name = "cmdRead";
             this.cmdRead.Size = new System.Drawing.Size(97, 22);
             this.cmdRead.TabIndex = 19;
-            this.cmdRead.Text = "Lire";
+            this.cmdRead.Text = "Read";
             this.cmdRead.UseVisualStyleBackColor = true;
             this.cmdRead.Click += new System.EventHandler(this.cmdRead_Click);
             // 
@@ -540,7 +547,7 @@ namespace ArduPilotConfigTool
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(439, 48);
             this.statusLabel.TabIndex = 17;
-            this.statusLabel.Text = "Planificateur de Mission... Prêt !";
+            this.statusLabel.Text = "Mission planner ... Prêt!";
             this.statusLabel.UseCompatibleTextRendering = true;
             this.statusLabel.Click += new System.EventHandler(this.statusLabel_Click);
             // 
@@ -551,11 +558,11 @@ namespace ArduPilotConfigTool
             this.lblClickMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblClickMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblClickMap.ForeColor = System.Drawing.Color.Blue;
-            this.lblClickMap.Location = new System.Drawing.Point(150, 178);
+            this.lblClickMap.Location = new System.Drawing.Point(176, 119);
             this.lblClickMap.Name = "lblClickMap";
-            this.lblClickMap.Size = new System.Drawing.Size(277, 18);
+            this.lblClickMap.Size = new System.Drawing.Size(192, 18);
             this.lblClickMap.TabIndex = 46;
-            this.lblClickMap.Text = "Cliquez sur la carte pour ajouter un WP";
+            this.lblClickMap.Text = "Click the map to add a WP";
             this.lblClickMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblClickMap.Click += new System.EventHandler(this.lblClickMap_Click);
             // 
@@ -575,16 +582,16 @@ namespace ArduPilotConfigTool
             this.groupBox2.Size = new System.Drawing.Size(105, 170);
             this.groupBox2.TabIndex = 48;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Autres réglages";
+            this.groupBox2.Text = "Other settings";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(2, 16);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(88, 13);
+            this.label7.Size = new System.Drawing.Size(87, 13);
             this.label7.TabIndex = 54;
-            this.label7.Text = "Rayon de virage:";
+            this.label7.Text = "Radius of virage:";
             // 
             // radius
             // 
@@ -601,9 +608,9 @@ namespace ArduPilotConfigTool
             this.lblHomeAltLabel.AutoSize = true;
             this.lblHomeAltLabel.Location = new System.Drawing.Point(3, 108);
             this.lblHomeAltLabel.Name = "lblHomeAltLabel";
-            this.lblHomeAltLabel.Size = new System.Drawing.Size(77, 13);
+            this.lblHomeAltLabel.Size = new System.Drawing.Size(69, 13);
             this.lblHomeAltLabel.TabIndex = 52;
-            this.lblHomeAltLabel.Text = "Altitude terrain:";
+            this.lblHomeAltLabel.Text = "Field altitude:";
             // 
             // lblHomeAlt
             // 
@@ -628,9 +635,9 @@ namespace ArduPilotConfigTool
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(2, 70);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 13);
+            this.label5.Size = new System.Drawing.Size(64, 13);
             this.label5.TabIndex = 49;
-            this.label5.Text = "Vitesse Max:";
+            this.label5.Text = "Speed Max:";
             // 
             // maxSpd
             // 
@@ -706,9 +713,10 @@ namespace ArduPilotConfigTool
             // 
             // picMap
             // 
-            this.picMap.Location = new System.Drawing.Point(469, 26);
+            this.picMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picMap.Location = new System.Drawing.Point(0, 0);
             this.picMap.Name = "picMap";
-            this.picMap.Size = new System.Drawing.Size(522, 477);
+            this.picMap.Size = new System.Drawing.Size(663, 523);
             this.picMap.TabIndex = 50;
             this.picMap.TabStop = false;
             this.picMap.Click += new System.EventHandler(this.picMap_Click);
@@ -731,7 +739,7 @@ namespace ArduPilotConfigTool
             this.grpOnline.Size = new System.Drawing.Size(345, 95);
             this.grpOnline.TabIndex = 51;
             this.grpOnline.TabStop = false;
-            this.grpOnline.Text = "Paramétrage Waypoint (Mode en ligne)";
+            this.grpOnline.Text = "Waypoint settings (online mode)";
             this.grpOnline.Enter += new System.EventHandler(this.grpOnline_Enter);
             // 
             // cmdCenter
@@ -741,7 +749,7 @@ namespace ArduPilotConfigTool
             this.cmdCenter.Name = "cmdCenter";
             this.cmdCenter.Size = new System.Drawing.Size(81, 23);
             this.cmdCenter.TabIndex = 52;
-            this.cmdCenter.Text = "Centrer";
+            this.cmdCenter.Text = "Center";
             this.cmdCenter.UseVisualStyleBackColor = true;
             this.cmdCenter.Click += new System.EventHandler(this.cmdCenter_Click);
             // 
@@ -752,7 +760,7 @@ namespace ArduPilotConfigTool
             this.cmdClear.Name = "cmdClear";
             this.cmdClear.Size = new System.Drawing.Size(114, 23);
             this.cmdClear.TabIndex = 51;
-            this.cmdClear.Text = "Effacer les Wp";
+            this.cmdClear.Text = "Clear Wp list";
             this.cmdClear.UseVisualStyleBackColor = true;
             this.cmdClear.Click += new System.EventHandler(this.cmdClear_Click);
             // 
@@ -772,10 +780,10 @@ namespace ArduPilotConfigTool
             this.optHome.Checked = true;
             this.optHome.Location = new System.Drawing.Point(107, 43);
             this.optHome.Name = "optHome";
-            this.optHome.Size = new System.Drawing.Size(58, 17);
+            this.optHome.Size = new System.Drawing.Size(47, 17);
             this.optHome.TabIndex = 49;
             this.optHome.TabStop = true;
-            this.optHome.Text = "Terrain";
+            this.optHome.Text = "Field";
             this.optHome.UseVisualStyleBackColor = true;
             // 
             // cmdSearch
@@ -784,7 +792,7 @@ namespace ArduPilotConfigTool
             this.cmdSearch.Name = "cmdSearch";
             this.cmdSearch.Size = new System.Drawing.Size(70, 23);
             this.cmdSearch.TabIndex = 48;
-            this.cmdSearch.Text = "Recherche";
+            this.cmdSearch.Text = "Search";
             this.cmdSearch.UseVisualStyleBackColor = true;
             this.cmdSearch.Click += new System.EventHandler(this.cmdSearch_Click);
             // 
@@ -793,9 +801,9 @@ namespace ArduPilotConfigTool
             this.lblAddress.AutoSize = true;
             this.lblAddress.Location = new System.Drawing.Point(6, 47);
             this.lblAddress.Name = "lblAddress";
-            this.lblAddress.Size = new System.Drawing.Size(100, 13);
+            this.lblAddress.Size = new System.Drawing.Size(60, 13);
             this.lblAddress.TabIndex = 47;
-            this.lblAddress.Text = "Rechercher un lieu:";
+            this.lblAddress.Text = "Find Place:";
             // 
             // txtAddress
             // 
@@ -809,11 +817,11 @@ namespace ArduPilotConfigTool
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(250, 43);
+            this.label9.Location = new System.Drawing.Point(258, 45);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(87, 13);
+            this.label9.Size = new System.Drawing.Size(57, 13);
             this.label9.TabIndex = 45;
-            this.label9.Text = "Zoom de la carte";
+            this.label9.Text = "Zoom map";
             // 
             // numericMaps
             // 
@@ -845,7 +853,7 @@ namespace ArduPilotConfigTool
             this.RemoveRow.Name = "RemoveRow";
             this.RemoveRow.Size = new System.Drawing.Size(126, 23);
             this.RemoveRow.TabIndex = 43;
-            this.RemoveRow.Text = "Retirer un Waypoint";
+            this.RemoveRow.Text = "Remove Waypoint";
             this.RemoveRow.UseVisualStyleBackColor = true;
             this.RemoveRow.Click += new System.EventHandler(this.RemoveRow_Click);
             // 
@@ -856,33 +864,48 @@ namespace ArduPilotConfigTool
             this.lblOfflineLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblOfflineLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOfflineLabel.ForeColor = System.Drawing.Color.Red;
-            this.lblOfflineLabel.Location = new System.Drawing.Point(753, 466);
+            this.lblOfflineLabel.Location = new System.Drawing.Point(728, 466);
             this.lblOfflineLabel.Name = "lblOfflineLabel";
-            this.lblOfflineLabel.Size = new System.Drawing.Size(238, 18);
+            this.lblOfflineLabel.Size = new System.Drawing.Size(194, 18);
             this.lblOfflineLabel.TabIndex = 53;
-            this.lblOfflineLabel.Text = "Image locale (Mode déconnecté)";
+            this.lblOfflineLabel.Text = "Local image (offline mode)";
             this.lblOfflineLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblOfflineLabel.Click += new System.EventHandler(this.lblOfflineLabel_Click);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.missionGrid);
+            this.splitContainer1.Panel1.Controls.Add(this.lblClickMap);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.picMap);
+            this.splitContainer1.Panel2.Controls.Add(this.webBrowser1);
+            this.splitContainer1.Size = new System.Drawing.Size(1157, 523);
+            this.splitContainer1.SplitterDistance = 490;
+            this.splitContainer1.TabIndex = 54;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(998, 523);
+            this.ClientSize = new System.Drawing.Size(1157, 523);
             this.Controls.Add(this.lblOfflineLabel);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.lblClickMap);
             this.Controls.Add(this.fraStatus);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.missionGrid);
             this.Controls.Add(this.mnuMain);
             this.Controls.Add(this.Launch_paramters);
-            this.Controls.Add(this.picMap);
-            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.grpOnline);
             this.Controls.Add(this.grpOffline);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuMain;
             this.MaximizeBox = false;
@@ -903,6 +926,11 @@ namespace ArduPilotConfigTool
             this.grpOnline.ResumeLayout(false);
             this.grpOnline.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaps)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -982,6 +1010,7 @@ namespace ArduPilotConfigTool
         private System.Windows.Forms.DataGridViewTextBoxColumn Altitude;
         private System.Windows.Forms.DataGridViewTextBoxColumn Hidden_Alt;
         private System.Windows.Forms.DataGridViewTextBoxColumn SeaLevelAlt;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 

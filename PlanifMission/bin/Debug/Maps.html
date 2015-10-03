@@ -38,10 +38,24 @@
    font-family: Tahoma;
    background-color: #fff;
 }
+
+div.markerTooltip, div.markerDetail {
+	color: black;
+    font-weight: bold;
+    background-color: white;
+    white-space: nowrap;
+    margin: 0;
+    padding: 2px 4px;
+    border: 1px solid black;
+}
+
+
 </style>
  
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA0Fr-33jU5znk3eeIujbO7BTJMCHS-jujuL6EC_OZAQIbzgaqGxSc7loBqiXeUNQ8d7DjBpAZtmBctg" type="text/javascript"> 
+
 </script>
+<script type="text/javascript" src="pdmarker.js"></script>
 </head>
 <body onload="buildMap()" onunload="GUnload()">
   
@@ -51,7 +65,8 @@
       <input type="hidden" size="10" name="index" value="" >
       <input type="hidden" size="10" name="lat" value="" >
       <input type="hidden" size="10" name="lng" value="" >
-      <input type="hidden" size="10" name="metersFeet" value="" >
+      <input type="hidden" size="10" name="wp_altQNH" value="" >
+      <input type="hidden" size="10" name="metersFeet" value="1" >
       <input type="hidden" size="10" name="heading" value="" >
 
       <input name="setHomeAddressButton" type="button" onClick="setHomeAddress(); return false" value="Set Home Address" >
@@ -82,7 +97,14 @@
       <input type="hidden" size="10" name="wpIndex" value="" >
       <input type="hidden" size="10" name="wpLat" value="" >
       <input type="hidden" size="10" name="wpLng" value="" >
-      <input name="moveWaypointButton" type="button" onClick="moveWaypoint(); return false" value="Move/Add Waypoint" >
+	  
+	  <input name="getWpAltitudeButton" type="button" onClick="getWpAltitude(); return false" value="Get Wp Altitude" >
+	  <input type="hidden" size="10" name="AltLat" value="" >
+      <input type="hidden" size="10" name="AltLng" value="" >
+	  <input type="hidden" size="10" name="endAltRequest" value="0" >
+      <input type="hidden" size="10" name="wpaltitude" value="0" >
+
+	  <input name="moveWaypointButton" type="button" onClick="moveWaypoint(); return false" value="Move/Add Waypoint" >
 
       <input type="hidden" size="10" name="dwIndex" value="" >
       <input name="deleteWaypointButton" type="button" onClick="deleteWaypoint(); return false" value="Delete Waypoint" >
@@ -127,6 +149,9 @@ var segmentWeight = 2;
 var segmentOpacity = .6;
 var sMaxDistance;
 
+var elevator;
+//window.alert('message');  // reference to current window
+
 function buildMap() 
 {
    if (GBrowserIsCompatible()) 
@@ -134,7 +159,6 @@ function buildMap()
 
       map = new GMap2(mapdiv, {draggableCursor:"auto", draggingCursor:"move"});
       geocoder = new GClientGeocoder();
-
       // Add a div element for toolips
       tooltip = document.createElement("div");
       tooltip.className="tooltip";
@@ -170,10 +194,21 @@ function buildMap()
       //planeicon.image = "http://maps.google.com/mapfiles/kml/pal2/icon56.png";
       addPlaneIcon(planeicon);
 
-       var oMarkerLatLong = new GLatLng(41.879483,-87.624335);
-      oMarker = new GMarker(oMarkerLatLong, {icon:homeicon, draggable:true, bouncy:false, dragCrossMove:true});
-      map.addOverlay(oMarker);
+      var oMarkerLatLong = new GLatLng(41.879483,-87.624335);
+     // oMarker = new GMarker(oMarkerLatLong, {icon:homeicon, draggable:true, bouncy:false, dragCrossMove:true});
+      oMarker = new PdMarker(oMarkerLatLong, {icon:homeicon, draggable:true, bouncy:false, dragCrossMove:true});
+	  map.addOverlay(oMarker);
       SetHomeMarker(map,oMarkerLatLong);
+	  // Create ElevationService
+	  elevator = new google.maps.ElevationService();
+	  
+	  //foundsingle(oMarkerLatLong);
+	  
+	  //var oLatlng = new google.maps.LatLng (oMarkerLatLong.lat(),oMarkerLatLong.lng());
+      //var oObj=new Object();
+      //oObj.LatLng=oLatlng;
+      //getElevation(oObj);
+
       drawOverlay();
       updateLengthText();
 
@@ -295,12 +330,17 @@ function setHomeLatLng()
 {
    if (GBrowserIsCompatible()) 
    {
+      // window.alert(document.getElementById('homeLat').value);
+      // window.alert(document.getElementById('homeLng').value);
+   
+   
       var point = new GLatLng(document.getElementById('homeLat').value,document.getElementById('homeLng').value);
       SetHomeMarker(map,point);
       //map.setCenter(point);
       document.getElementById('index').value = "Home";
       document.getElementById('lat').value = point.lat()
       document.getElementById('lng').value = point.lng()
+	  foundsingle(point);
       drawOverlay();
       updateLengthText();
    }
@@ -324,7 +364,8 @@ function addSegment()
       point = new GLatLng(document.getElementById('segmentLat').value,document.getElementById('segmentLng').value);
       if (travelLine.length == 0)
       {
-         plane = new GMarker(point, {icon:planeicon, draggable:true, bouncy:false, dragCrossMove:true});
+         //plane = new GMarker(point, {icon:planeicon, draggable:true, bouncy:false, dragCrossMove:true});
+		 plane = new PdMarker(point, {icon:planeicon, draggable:true, bouncy:false, dragCrossMove:true});
          map.addOverlay(plane);
       }
       travelLine.push(point);
@@ -380,11 +421,13 @@ function addWaypointLatLng()
 
       if (document.getElementById('lockDragDrop').value != "Locked")
       {
-         var marker = new GMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
+         //var marker = new GMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
+		 var marker = new PdMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
       }
       else
       {
-         var marker = new GMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
+         //var marker = new GMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
+		 var marker = new PdMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
       }
       map.addOverlay(marker);
       marker.content = markers.length+1;
@@ -438,7 +481,7 @@ function showTooltip(marker)
       var height = 5;
       var pos = new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(offset.x - point.x - anchor.x + width, offset.y - point.y -anchor.y - height)); 
       pos.apply(tooltip);
-   }
+	}
 }
  
 function zoomLevel(oldLevel, newLevel)
@@ -463,7 +506,8 @@ function SetHomeMarker(overlay, point)
    if (GBrowserIsCompatible()) 
    {
       oMarker.setLatLng(point);
-      oMarker.tooltip = "Home";
+      //oMarker.tooltip = "Home";
+	  oMarker.setTooltip("Home");
       document.getElementById('index').value = 'Home';
       document.getElementById('lat').value = oMarker.getPoint().lat()
       document.getElementById('lng').value = oMarker.getPoint().lng()
@@ -471,7 +515,7 @@ function SetHomeMarker(overlay, point)
  
       GEvent.addListener(oMarker, "mouseover", function() 
       {
-         showTooltip(oMarker);
+         //showTooltip(oMarker);
       });
  
       GEvent.addListener(oMarker, "mouseout", function() 
@@ -484,7 +528,8 @@ function SetHomeMarker(overlay, point)
       {
          tooltip.style.display= "none";
          map.removeOverlay(poly); 
-         //oMarker.Tooltip = "Home Position:" + oMarker.getLatLng();
+         
+		 //oMarker.Tooltip = "Home Position:" + oMarker.getLatLng();
          //drawOverlay();
       });
       
@@ -550,17 +595,24 @@ function leftClick(overlay, point)
          // Make markers draggable
          if ((document.getElementById('lockDragDrop').value != "Locked" && document.getElementById('lockDragDrop').value != "Loading"))
          {
-            var marker = new GMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
+           // var marker = new GMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
+		    var marker = new PdMarker(point, {icon:icon, draggable:true, bouncy:true, dragCrossMove:true});
             marker.impoartance = 3;
          }
          else
          {
-            var marker = new GMarker(point, {icon:icon, draggable:false, bouncy:true, dragCrossMove:true});
+		    //var marker = new GMarker(point, {icon:icon, draggable:false, bouncy:true, dragCrossMove:true});
+            var marker = new PdMarker(point, {icon:icon, draggable:false, bouncy:true, dragCrossMove:true});
          }
          map.addOverlay(marker);
          marker.content = markers.length+1;
          markers.push(marker);
-         marker.tooltip = "Waypoint #" + markers.length;
+         //marker.tooltip = "Waypoint #" + markers.length;
+		 marker.setTooltip("Waypoint #" + markers.length);
+		 
+		 marker.setOpacity(70); // 30% transparent
+		 //marker.resetTooltipClass(); // restore default css class
+		 marker.allowLeftTooltips(true); // always on right side for ALL markers
          document.getElementById('index').value = markers.length;
          document.getElementById('lat').value = point.lat()
          document.getElementById('lng').value = point.lng()
@@ -580,7 +632,7 @@ function addListeners(marker)
       // Mouse Over Event
       GEvent.addListener(marker, "mouseover", function() 
       {
-         showTooltip(marker);
+        // showTooltip(marker);
       });
 
       // Mouse Out Event
@@ -725,10 +777,109 @@ function changeHeading(heading)
       map.removeOverlay(plane);   
       planeicon.image = "http://maps.google.com/mapfiles/dir_" + (heading) + ".png";
       //report.innerHTML = "http://maps.google.com/mapfiles/dir_" + (heading) + ".png";
-      plane = new GMarker(travelLine[travelLine.length-1], {icon:planeicon, draggable:true, bouncy:false, dragCrossMove:true});
+      //plane = new GMarker(travelLine[travelLine.length-1], {icon:planeicon, draggable:true, bouncy:false, dragCrossMove:true});
+	  plane = new PdMarker(travelLine[travelLine.length-1], {icon:planeicon, draggable:true, bouncy:false, dragCrossMove:true});
       map.addOverlay(plane);
       //plane.setLatLng(travelLine[travelLine.length-1]);
    }
 }
+
+function getWpAltitude()
+{   
+//    window.alert(document.getElementById('AltLat').value);
+//    window.alert(document.getElementById('AltLng').value);
+
+	document.getElementById('endAltRequest').value = 0;	
+
+	var l_point = new GLatLng(document.getElementById('AltLat').value, document.getElementById('AltLng').value);
+	
+    findAltitude(l_point);
+}
+
+function findAltitude(first)
+{
+	var olatlng = new google.maps.LatLng (first.lat(),first.lng());
+	var oobj=new Object();
+	oobj.LatLng = olatlng;
+	getAltitude(oobj);
+}
+
+function getAltitude(event) 
+{
+	var locations = [];
+
+	// Retrieve the clicked location and push it on the array
+	var clickedLocation = event.LatLng;
+	locations.push(clickedLocation);
+	// Create a LocationElevationRequest object using the array's one value
+	var positionalRequest = {'locations': locations};
+	// Initiate the location request
+	elevator.getElevationForLocations(positionalRequest, function(results, status) 
+	{
+		if (status == google.maps.ElevationStatus.OK) 
+		{
+			// Retrieve the first result
+			if (results[0]) 
+			{   
+			   // window.alert(results[0].elevation.toFixed(3)); 
+				// Open an info window indicating the elevation at the clicked position
+				document.getElementById('wpaltitude').value = results[0].elevation.toFixed(3);
+				document.getElementById('endAltRequest').value = 1;
+				//window.alert(document.getElementById('wpaltitude').value);
+			} 
+			else 
+			{
+				window.alert('No results found');
+			}
+		} 
+		else 
+		{
+			window.alert('Get Elevation Status Error');
+		}
+	});
+}
+
+
+function foundsingle(first)
+{
+	var olatlng = new google.maps.LatLng (first.lat(),first.lng());
+	var oobj=new Object();
+	oobj.LatLng = olatlng;
+	getElevation(oobj);
+}
+
+function getElevation(event) 
+{
+	var locations = [];
+
+	// Retrieve the clicked location and push it on the array
+	var clickedLocation = event.LatLng;
+	locations.push(clickedLocation);
+	// Create a LocationElevationRequest object using the array's one value
+	var positionalRequest = {'locations': locations};
+	// Initiate the location request
+	elevator.getElevationForLocations(positionalRequest, function(results, status) 
+	{
+		if (status == google.maps.ElevationStatus.OK) 
+		{
+			// Retrieve the first result
+			if (results[0]) 
+			{   
+				// Open an info window indicating the elevation at the clicked position
+				document.getElementById('wp_altQNH').value = results[0].elevation.toFixed(3);
+				//window.alert(document.getElementById('wp_altQNH').value);
+			} 
+			else 
+			{
+				window.alert('No results found');
+			}
+		} 
+		else 
+		{
+			window.alert('Get Elevation Status Error');
+		}
+	});
+}
+
 
 </script>
