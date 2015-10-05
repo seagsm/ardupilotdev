@@ -240,13 +240,14 @@ namespace ArduPilotConfigTool
             // 
             // mnuMain
             // 
+            this.mnuMain.Dock = System.Windows.Forms.DockStyle.None;
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFiles,
             this.moreToolStripMenuItem,
             this.dIYdronescomToolStripMenuItem});
-            this.mnuMain.Location = new System.Drawing.Point(0, 0);
+            this.mnuMain.Location = new System.Drawing.Point(11, 0);
             this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(1157, 24);
+            this.mnuMain.Size = new System.Drawing.Size(194, 24);
             this.mnuMain.TabIndex = 13;
             this.mnuMain.Text = "menuStrip1";
             this.mnuMain.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mnuMain_ItemClicked);
@@ -882,6 +883,7 @@ namespace ArduPilotConfigTool
             // 
             this.splitContainer1.Panel1.Controls.Add(this.missionGrid);
             this.splitContainer1.Panel1.Controls.Add(this.lblClickMap);
+            this.splitContainer1.Panel1.Controls.Add(this.mnuMain);
             // 
             // splitContainer1.Panel2
             // 
@@ -901,7 +903,6 @@ namespace ArduPilotConfigTool
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.fraStatus);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.mnuMain);
             this.Controls.Add(this.Launch_paramters);
             this.Controls.Add(this.grpOnline);
             this.Controls.Add(this.grpOffline);
